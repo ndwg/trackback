@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import classes from './Playlist.module.scss'
 import axios from 'axios'
 
 async function fetchPlaylist(id) {
@@ -39,7 +40,7 @@ const Playlist = ({id}) => {
     if (!playlist) return <p>Playlist not found.</p>;
 
     return(
-        <div>
+        <div className={`${classes.playlist}`}>
             <img src={playlist.picture_medium} alt="" />
             <p>{playlist.title}</p>
         </div>
