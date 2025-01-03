@@ -1,40 +1,18 @@
-import React, { useState, useEffect } from 'react';
+import React, { useMemo } from 'react';
 import classes from './Playlist.module.scss'
-import axios from 'axios'
+import { useFetch } from '../../hooks';
 
-async function fetchPlaylist(id) {
-    const options = {
+const Playlist = ({id}) => {
+    const options = useMemo(() => ({
         method: 'GET',
         url: `https://deezerdevs-deezer.p.rapidapi.com/playlist/${id}`,
         headers: {
-          'x-rapidapi-key': import.meta.env.VITE_DEEZER_KEY,
-          'x-rapidapi-host': 'deezerdevs-deezer.p.rapidapi.com'
+            'x-rapidapi-key': import.meta.env.VITE_DEEZER_KEY,
+            'x-rapidapi-host': 'deezerdevs-deezer.p.rapidapi.com'
         }
-      };
-      
-    try {
-        const {data} = await axios.request(options);
-        return data;
-    }
-    catch (error) {
-        console.error('Error fetching playlist:', error);
-        return null;
-    }
-}
+    }), [id]);
 
-const Playlist = ({id}) => {
-    const [playlist, setPlaylist] = useState(null);
-    const [loading, setLoading] = useState(true);
-
-    useEffect(() => {
-        const fetchData = async () => {
-            const data = await fetchPlaylist(id);
-            setPlaylist(data);
-            setLoading(false);
-        };
-
-        fetchData();
-    }, [id]);
+    const { data: playlist, loading } = useFetch(options);
 
     if (loading) return <p>Loading...</p>;
     if (!playlist) return <p>Playlist not found.</p>;
