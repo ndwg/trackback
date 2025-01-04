@@ -1,33 +1,56 @@
 import classes from './GameInterface.module.scss'
-import { useFetch } from '../../hooks';
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { FaPause, FaPlay } from "react-icons/fa";
 
-const checkGuess = (event, guess, name) => {
+const checkGuess = (event, guess, name, endRound, resetField) => {
     event.preventDefault();
     if(guess.toLowerCase() === name.toLowerCase()){
         console.log('Correct!');
+        endRound(true);
     }
     else{
         console.log('Try Again!');
     }
+
+    resetField('');
 }
 
 const GameInterface = ({id}) => {
-    const options = useMemo(() => ({
-        method: 'GET',
-        url: `https://deezerdevs-deezer.p.rapidapi.com/playlist/${id}`,
-        headers: {
-            'x-rapidapi-key': import.meta.env.VITE_DEEZER_KEY,
-            'x-rapidapi-host': 'deezerdevs-deezer.p.rapidapi.com'
-        }
-    }), [id]);
-    
+    const [playlist, setPlaylist] = useState(null);
     const [track, setTrack] = useState(null);
     const [audio, setAudio] = useState(null);
     const [isPlaying, setIsPlaying] = useState(false);
     const [guess, setGuess] = useState("");
+    const [roundIsOver, setRoundIsOver] = useState(false);
 
-    const { data: playlist, loading } = useFetch(options);
+    useEffect(() => {
+        const fetchPlaylist = async () => {
+            try {
+                const response = await fetch(
+                    `https://deezerdevs-deezer.p.rapidapi.com/playlist/${id}`,
+                    {
+                        method: 'GET',
+                        headers: {
+                            'x-rapidapi-key': import.meta.env.VITE_DEEZER_KEY,
+                            'x-rapidapi-host': 'deezerdevs-deezer.p.rapidapi.com',
+                        },
+                    }
+                );
+                console.log("fetch");
+
+                if (!response.ok) {
+                    throw new Error('Failed to fetch playlist');
+                }
+
+                const data = await response.json();
+                setPlaylist(data);
+            } catch (err) {
+                console.log(err.message);
+            }
+        };
+
+        fetchPlaylist();
+    }, [id]);
 
     useEffect(() => {
         if(playlist){
@@ -38,14 +61,18 @@ const GameInterface = ({id}) => {
     const newTrack = () => {
         const randomTrack = Math.floor(Math.random()*playlist.tracks.data.length);
         setTrack(randomTrack);
-        //console.log(playlist.tracks.data[track]);
+        setRoundIsOver(false);
+        if (audio){
+            audio.pause();
+            setAudio(null);
+        }
+        setIsPlaying(false);
     };
 
     const handlePlay = () => {
         if (audio) {
             audio.play();
             setIsPlaying(true);
-            
             return;
         }
         const newAudio = new Audio(playlist.tracks.data[track].preview);
@@ -64,28 +91,58 @@ const GameInterface = ({id}) => {
     };
 
     const handleGuess = (event) => {
-        checkGuess(event, guess, playlist.tracks.data[track].artist.name);
+        checkGuess(event, guess, playlist.tracks.data[track].artist.name, setRoundIsOver, setGuess);
+    };
+
+    const handleGiveUp = () => {
+        setRoundIsOver(true);
+    };
+
+    const handleNewRound = () => {
+        newTrack();
     };
 
     if(track) {
     return(
-        <>
-            <img className={`${classes.image}`} src={playlist.tracks.data[track].album.cover_medium} alt="" />
+        <div className={`${classes.interface}`}>
+            <img
+                className={roundIsOver? '' :`${classes.hiddenCover}`}
+                src={playlist.tracks.data[track].album.cover_medium}
+                alt="album cover"
+            />
+            <p className={roundIsOver? '' :`${classes.hiddenInfo}`}>
+                {playlist.tracks.data[track].title}
+            </p>
+            <p className={roundIsOver? '' :`${classes.hiddenInfo}`}>
+                {playlist.tracks.data[track].artist.name}
+            </p>
             {console.log(playlist.tracks.data[track])}
-            <button onClick={isPlaying ? handlePause : handlePlay}>
-                {isPlaying ? '⏸︎' : '⏵︎'}
+            <button
+                className={`${classes.playButton}`}
+                onClick={isPlaying ? handlePause : handlePlay}
+            >
+                {isPlaying ? <FaPause /> : <FaPlay />}
             </button>
             <form onSubmit={handleGuess}>
-                <label htmlFor="guess">Guess the artist:</label>
+                <label htmlFor="guess">guess the artist:</label>
                 <input type="text" id="guess" name="guess" value={guess} onChange={(e) => setGuess(e.target.value)}/>
                 <button type="submit">guess</button>
             </form>
-        </>
-        
+            <button
+                className={roundIsOver? `${classes.hiddenButton}`: ''}
+                onClick={handleGiveUp}>
+                give up
+            </button>
+            <button
+                className={roundIsOver? '': `${classes.hiddenButton}`}
+                onClick={handleNewRound}>
+                next
+            </button>
+        </div> 
     )
     }
     return(
-        <div>loading</div>
+        <div>loading...</div>
     )
 }
 

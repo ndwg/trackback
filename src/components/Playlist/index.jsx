@@ -1,20 +1,39 @@
-import React, { useMemo } from 'react';
+import React, { useState, useEffect } from 'react';
 import classes from './Playlist.module.scss'
-import { useFetch } from '../../hooks';
 
 const Playlist = ({id}) => {
-    const options = useMemo(() => ({
-        method: 'GET',
-        url: `https://deezerdevs-deezer.p.rapidapi.com/playlist/${id}`,
-        headers: {
-            'x-rapidapi-key': import.meta.env.VITE_DEEZER_KEY,
-            'x-rapidapi-host': 'deezerdevs-deezer.p.rapidapi.com'
-        }
-    }), [id]);
+    const [playlist, setPlaylist] = useState(null);
 
-    const { data: playlist, loading } = useFetch(options);
+    useEffect(() => {
+        const fetchPlaylist = async () => {
+            try {
+                const response = await fetch(
+                    `https://deezerdevs-deezer.p.rapidapi.com/playlist/${id}`,
+                    {
+                        method: 'GET',
+                        headers: {
+                            'x-rapidapi-key': import.meta.env.VITE_DEEZER_KEY,
+                            'x-rapidapi-host': 'deezerdevs-deezer.p.rapidapi.com',
+                        },
+                    }
+                );
+                console.log("fetch");
 
-    if (loading) return <p>Loading...</p>;
+                if (!response.ok) {
+                    throw new Error('Failed to fetch playlist');
+                }
+
+                const data = await response.json();
+                setPlaylist(data);
+            } catch (err) {
+                console.log(err.message);
+            }
+        };
+
+        fetchPlaylist();
+    }, [id]);
+
+    //if (loading) return <p>Loading...</p>;
     if (!playlist) return <p>Playlist not found.</p>;
 
     return(

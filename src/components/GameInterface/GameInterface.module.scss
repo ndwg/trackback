@@ -1,3 +1,40 @@
-.image {
-    filter: blur(7px); 
+.interface {
+    justify-items: center;
+    margin: 2rem;
+}
+
+.hiddenCover {
+    filter: blur(7px);
+}
+
+.hiddenInfo {
+    visibility: hidden;
+}
+
+.playButton {
+    border-radius: 100%;
+    background-color: lime;
+    border: 1px solid limegreen;
+    color: black;
+    height: 3rem;
+    width: 3rem;
+    margin: 1rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1rem;
+    font-weight: bold;
+    text-decoration: none
+}
+
+.playButton:hover {
+    background-color: rgb(16, 218, 16);
+}
+
+.playButton:active {
+    background-color: chartreuse;
+}
+
+.hiddenButton {
+    display: none;
 }

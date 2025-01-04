@@ -23,5 +23,7 @@ export const useFetch = (options) => {
         fetchData();
     }, [options]);
 
+    console.log('fetch');
+
     return { data, loading };
 };
