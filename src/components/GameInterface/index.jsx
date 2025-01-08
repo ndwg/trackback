@@ -102,7 +102,9 @@ const GameInterface = ({id}) => {
         newTrack();
     };
 
-    if(track) {
+    console.log(track)
+
+    if(track || track === 0) {
     return(
         <div className={`${classes.interface}`}>
             <img
