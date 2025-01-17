@@ -1,15 +1,8 @@
-import { useState } from 'react'
 import {
-  BrowserRouter as Router,
   Routes,
   Route,
-  Link,
-  Navigate,
-  useParams,
-  useNavigate,
   useMatch
 } from "react-router-dom"
-import Playlist from './components/Playlist';
 import PlaylistGroup from './components/PlaylistGroup';
 import Footer from './components/Footer';
 import GameInterface from './components/GameInterface';
@@ -23,8 +16,12 @@ function App() {
   const aughts = [248297032, 9341070582, 5714797982, 4135818362, 5782150322]
   const nineties = [8311123682, 1724212365, 1728093421, 4135981802, 1950632062]
   const eighties = [8512471762, 5172233424, 8621268482, 1294679255, 1276784581]
-  const seventies = []
-  const sixties = []
+
+  var playlistCount = 1;
+
+  if(window.matchMedia("(min-width: 670px)").matches) playlistCount = 2;
+  if(window.matchMedia("(min-width: 940px)").matches) playlistCount = 3;
+  if(window.matchMedia("(min-width: 1200px)").matches) playlistCount = 4;
 
   const match = useMatch('playlist/:id')
 
@@ -39,11 +36,10 @@ function App() {
         }/>
         <Route path='/' element={
           <>
-          <PlaylistGroup playlists={decades}/>
-          <PlaylistGroup playlists={teens}/>
-          <PlaylistGroup playlists={aughts}/>
-          <PlaylistGroup playlists={nineties}/>
-          <PlaylistGroup playlists={eighties}/>
+          <h1>choose a playlist</h1>
+          <PlaylistGroup playlists={decades} count={playlistCount}/>
+          <PlaylistGroup playlists={teens} count={playlistCount}/>
+          <PlaylistGroup playlists={aughts} count={playlistCount}/>
           </>
           }/>
       </Routes>

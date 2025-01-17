@@ -33,8 +33,14 @@ const Playlist = ({id}) => {
         fetchPlaylist();
     }, [id]);
 
-    //if (loading) return <p>Loading...</p>;
-    if (!playlist) return <p>Playlist not found.</p>;
+    if (!playlist) {
+        return(
+            <div className={`${classes.playlist}`}>
+                <img src="https://image.architonic.com/pro1-3/20182929/vm-2036-z-pro-sq-arcit18.jpg" alt="" />
+                <p>loading...</p>
+            </div>
+        )
+    }
 
     return(
         <div className={`${classes.playlist}`}>

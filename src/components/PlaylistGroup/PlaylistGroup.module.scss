@@ -2,6 +2,38 @@
     list-style: none;
     padding: .5em;
 }
+
 .list{
     display: flex;
+    padding-inline-start: 0;
+}
+
+.container{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.button{
+    border-radius: 100%;
+    background-color: lime;
+    border: 1px solid limegreen;
+    color: black;
+    height: 3rem;
+    width: 3rem;
+    margin: .5rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1rem;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.button:hover {
+    background-color: rgb(16, 218, 16);
+}
+
+.button:active {
+    background-color: chartreuse;
 }

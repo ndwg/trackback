@@ -1,14 +1,5 @@
 import classes from './Header.module.scss'
-import {
-    BrowserRouter as Router,
-    Routes,
-    Route,
-    Link,
-    Navigate,
-    useParams,
-    useNavigate,
-    useMatch
-  } from "react-router-dom"
+import { Link } from "react-router-dom"
 import { IoMusicalNote } from "react-icons/io5";
 
 const Header = () => {
