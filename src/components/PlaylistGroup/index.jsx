@@ -1,79 +1,56 @@
-import classes from './PlaylistGroup.module.scss'
+import classes from './PlaylistGroup.module.scss';
 import Playlist from '../Playlist';
 import React, { useEffect, useState } from 'react';
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
-import { Link } from "react-router-dom"
+import { Link } from "react-router-dom";
 
-const PlaylistGroup = ({playlists, count}) => {
-    const [displayedPlaylists, setDisplayedPlaylists] = useState(null);
+const PlaylistGroup = ({ playlists, count, name }) => {
     const [leftBound, setLeftBound] = useState(0);
-    const [rightBound, setRightBound] = useState(count);
 
     useEffect(() => {
-        setDisplayedPlaylists(playlists.slice(leftBound, rightBound));
-    }, [playlists])
+        setLeftBound(0);
+    }, [count]);
+
+    const getDisplayedPlaylists = () => {
+        if (leftBound + count > playlists.length) {
+            return playlists.slice(leftBound).concat(playlists.slice(0, (leftBound + count) % playlists.length));
+        } else {
+            return playlists.slice(leftBound, leftBound + count);
+        }
+    };
 
     const handleLeftButton = () => {
-        setLeftBound((prevLeftBound) => {
-            const newLeftBound = prevLeftBound === 0 ? playlists.length - 1 : prevLeftBound - 1;
-            setDisplayedPlaylists(() => {
-                const newRightBound = rightBound === 0 ? playlists.length - 1 : rightBound - 1;
-                return newLeftBound < newRightBound
-                    ? playlists.slice(newLeftBound, newRightBound)
-                    : playlists.slice(newLeftBound).concat(playlists.slice(0, newRightBound));
-            });
-            return newLeftBound;
-        });
-    
-        setRightBound((prevRightBound) => {
-            const newRightBound = prevRightBound === 0 ? playlists.length - 1 : prevRightBound - 1;
-            return newRightBound;
-        });
+        setLeftBound((prevLeftBound) => (prevLeftBound - 1 + playlists.length) % playlists.length);
     };
 
     const handleRightButton = () => {
-        setLeftBound((prevLeftBound) => {
-            const newLeftBound = (prevLeftBound + 1) % playlists.length;
-            setDisplayedPlaylists(() => {
-                const newRightBound = (rightBound + 1) % playlists.length;
-                return newLeftBound < newRightBound
-                    ? playlists.slice(newLeftBound, newRightBound)
-                    : playlists.slice(newLeftBound).concat(playlists.slice(0, newRightBound));
-            });
-            return newLeftBound;
-        });
-    
-        setRightBound((prevRightBound) => {
-            const newRightBound = (prevRightBound + 1) % playlists.length;
-            return newRightBound;
-        });
+        setLeftBound((prevLeftBound) => (prevLeftBound + 1) % playlists.length);
     };
 
-    if(displayedPlaylists) return(
-        <div className={`${classes.container}`}>
-            <button
-                onClick={handleLeftButton}
-                className={`${classes.button}`}
-            >
-                <FaArrowLeft />
-            </button>
-            <ul className={`${classes.list}`}>
-                {displayedPlaylists.map(playlist =>
-                    <li key={`${playlist}`} className={`${classes.element}`}>
-                        <Link to={`/playlist/${playlist}`}>
-                            <Playlist id={playlist}/>
-                        </Link>
-                    </li>
-                )}
-            </ul>
-            <button
-                onClick={handleRightButton}
-                className={`${classes.button}`}
-            >
-                <FaArrowRight />
-            </button>
+    return (
+        <div className={`${classes.outerContainer}`}>
+            <div className={`${classes.innerContainer}`}>
+                <h2 className={`${classes.label}`}>{name}</h2>
+                <div className={`${classes.playlists}`}>
+                    <button onClick={handleLeftButton} className={`${classes.button}`}>
+                        <FaArrowLeft />
+                    </button>
+                    <ul className={`${classes.list}`}>
+                        {getDisplayedPlaylists().map((playlist) => (
+                            <li key={playlist} className={`${classes.element}`}>
+                                <Link to={`/playlist/${playlist}`}>
+                                    <Playlist id={playlist} />
+                                </Link>
+                            </li>
+                        ))}
+                    </ul>
+                    <button onClick={handleRightButton} className={`${classes.button}`}>
+                        <FaArrowRight />
+                    </button>
+                </div>
+            </div>
         </div>
-    )
-}
+    );
+};
 
-export default PlaylistGroup
+export default PlaylistGroup;

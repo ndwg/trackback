@@ -1,27 +1,15 @@
 import classes from './GameInterface.module.scss'
 import React, { useEffect, useState } from 'react';
 import { FaPause, FaPlay } from "react-icons/fa";
-
-const checkGuess = (event, guess, name, endRound, resetField) => {
-    event.preventDefault();
-    if(guess.toLowerCase() === name.toLowerCase()){
-        console.log('Correct!');
-        endRound(true);
-    }
-    else{
-        console.log('Try Again!');
-    }
-
-    resetField('');
-}
+import TextField from '../TextField';
 
 const GameInterface = ({id}) => {
     const [playlist, setPlaylist] = useState(null);
     const [track, setTrack] = useState(null);
     const [audio, setAudio] = useState(null);
     const [isPlaying, setIsPlaying] = useState(false);
-    const [guess, setGuess] = useState("");
     const [roundIsOver, setRoundIsOver] = useState(false);
+    const [artists, setArtists] = useState(false);
 
     useEffect(() => {
         const fetchPlaylist = async () => {
@@ -55,6 +43,7 @@ const GameInterface = ({id}) => {
     useEffect(() => {
         if(playlist){
             newTrack();
+            setArtists(playlist.tracks.data.map((track) => track.artist.name));
         }
     }, [playlist]);
 
@@ -90,10 +79,6 @@ const GameInterface = ({id}) => {
         }
     };
 
-    const handleGuess = (event) => {
-        checkGuess(event, guess, playlist.tracks.data[track].artist.name, setRoundIsOver, setGuess);
-    };
-
     const handleGiveUp = () => {
         setRoundIsOver(true);
     };
@@ -102,7 +87,7 @@ const GameInterface = ({id}) => {
         newTrack();
     };
 
-    console.log(track)
+    console.log(playlist)
 
     if(track || track === 0) {
     return(
@@ -125,11 +110,7 @@ const GameInterface = ({id}) => {
             >
                 {isPlaying ? <FaPause /> : <FaPlay />}
             </button>
-            <form onSubmit={handleGuess}>
-                <label htmlFor="guess">guess the artist:</label>
-                <input type="text" id="guess" name="guess" value={guess} onChange={(e) => setGuess(e.target.value)}/>
-                <button type="submit">guess</button>
-            </form>
+            <TextField values={artists} playlist={playlist} track={track} endRound={setRoundIsOver} roundStatus={roundIsOver}/>
             <button
                 className={roundIsOver? `${classes.hiddenButton}`: ''}
                 onClick={handleGiveUp}>

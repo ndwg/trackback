@@ -8,7 +8,7 @@
     padding-inline-start: 0;
 }
 
-.container{
+.playlists{
     display: flex;
     justify-content: center;
     align-items: center;
@@ -36,4 +36,17 @@
 
 .button:active {
     background-color: chartreuse;
+}
+
+.outerContainer {
+    display: flex;
+    justify-content: center; 
+}
+
+.innerContainer {
+    width: fit-content;   
+}
+
+.label {
+    margin-left: 5rem;
 }
