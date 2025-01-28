@@ -16,7 +16,7 @@ const TextField = ({ values, playlist, track, endRound, roundStatus }) => {
     const handleSelect = (suggestion) => {
         setInputValue(suggestion);
         setSuggestions([]);
-        if (suggestion === playlist.tracks.data[track].artist.name) {
+        if (suggestion === playlist[track].artist.name) {
             endRound(true);
             setInputValue('');
         }

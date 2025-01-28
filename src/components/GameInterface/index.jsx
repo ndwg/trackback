@@ -1,11 +1,13 @@
 import classes from './GameInterface.module.scss'
 import React, { useEffect, useState } from 'react';
+import { useLocation } from 'react-router-dom';
 import { FaPause, FaPlay } from "react-icons/fa";
+import { CiFaceSmile } from "react-icons/ci";
 import TextField from '../TextField';
 
 const GameInterface = ({id}) => {
     const [playlist, setPlaylist] = useState(null);
-    const [track, setTrack] = useState(null);
+    const [track, setTrack] = useState(0);
     const [audio, setAudio] = useState(null);
     const [isPlaying, setIsPlaying] = useState(false);
     const [roundIsOver, setRoundIsOver] = useState(false);
@@ -24,15 +26,21 @@ const GameInterface = ({id}) => {
                         },
                     }
                 );
-                console.log("fetch");
 
                 if (!response.ok) {
                     throw new Error('Failed to fetch playlist');
                 }
 
-                const data = await response.json();
+                const data = (await response.json()).tracks.data.filter((track) => track.preview);
+
+                for (let i = data.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [data[i], data[j]] = [data[j], data[i]];
+                }
+
                 setPlaylist(data);
-            } catch (err) {
+            } 
+            catch (err) {
                 console.log(err.message);
             }
         };
@@ -41,22 +49,17 @@ const GameInterface = ({id}) => {
     }, [id]);
 
     useEffect(() => {
+        return () => {
+            handlePause();
+        };
+    }, [useLocation().pathname, audio]);
+
+    useEffect(() => {
         if(playlist){
-            newTrack();
-            setArtists(playlist.tracks.data.map((track) => track.artist.name));
+            const completeArtists = playlist.map((track) => track.artist.name);
+            setArtists([...new Set(completeArtists)]);
         }
     }, [playlist]);
-
-    const newTrack = () => {
-        const randomTrack = Math.floor(Math.random()*playlist.tracks.data.length);
-        setTrack(randomTrack);
-        setRoundIsOver(false);
-        if (audio){
-            audio.pause();
-            setAudio(null);
-        }
-        setIsPlaying(false);
-    };
 
     const handlePlay = () => {
         if (audio) {
@@ -64,7 +67,7 @@ const GameInterface = ({id}) => {
             setIsPlaying(true);
             return;
         }
-        const newAudio = new Audio(playlist.tracks.data[track].preview);
+        const newAudio = new Audio(playlist[track].preview);
         setAudio(newAudio);
         newAudio.play();
         setIsPlaying(true);
@@ -84,26 +87,34 @@ const GameInterface = ({id}) => {
     };
 
     const handleNewRound = () => {
-        newTrack();
+        setTrack(track => track+1);
+        setRoundIsOver(false);
+        if (audio){
+            audio.pause();
+            setAudio(null);
+        }
+        setIsPlaying(false);
     };
 
-    console.log(playlist)
-
-    if(track || track === 0) {
+    if(playlist && track === playlist.length){
+        return(
+            <h1>game over <CiFaceSmile /></h1>
+        )
+    }
+    else if(playlist && (track || track === 0)) {
     return(
         <div className={`${classes.interface}`}>
             <img
                 className={roundIsOver? '' :`${classes.hiddenCover}`}
-                src={playlist.tracks.data[track].album.cover_medium}
+                src={playlist[track].album.cover_medium}
                 alt="album cover"
             />
             <p className={roundIsOver? '' :`${classes.hiddenInfo}`}>
-                {playlist.tracks.data[track].title}
+                {playlist[track].title}
             </p>
             <p className={roundIsOver? '' :`${classes.hiddenInfo}`}>
-                {playlist.tracks.data[track].artist.name}
+                {playlist[track].artist.name}
             </p>
-            {console.log(playlist.tracks.data[track])}
             <button
                 className={`${classes.playButton}`}
                 onClick={isPlaying ? handlePause : handlePlay}

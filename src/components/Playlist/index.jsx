@@ -17,7 +17,6 @@ const Playlist = ({id}) => {
                         },
                     }
                 );
-                console.log("fetch");
 
                 if (!response.ok) {
                     throw new Error('Failed to fetch playlist');
