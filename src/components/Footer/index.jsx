@@ -12,6 +12,9 @@ const Footer = () => {
             <p>
                 created by Nathan Silva
             </p>
+            <p>
+                <a href="https://github.com/ndwg/trackback">source</a>
+            </p>
         </div>
     )
 }

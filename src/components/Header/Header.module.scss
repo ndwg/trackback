@@ -1,8 +1,16 @@
 .header{
-    background-color: black;
+    background-color: #5F4B66;
 }
 
 .text{
     color: lime;
     text-decoration: none; 
+}
+
+.text:hover{
+    color: #10DA10;
+}
+
+.text:active{
+    color: chartreuse;
 }

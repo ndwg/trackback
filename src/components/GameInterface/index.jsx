@@ -3,10 +3,12 @@ import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { FaPause, FaPlay } from "react-icons/fa";
 import { CiFaceSmile } from "react-icons/ci";
+import { IoIosSkipForward } from "react-icons/io";
 import TextField from '../TextField';
 
 const GameInterface = ({id}) => {
     const [playlist, setPlaylist] = useState(null);
+    const [details, setDetails] = useState(null);
     const [track, setTrack] = useState(0);
     const [audio, setAudio] = useState(null);
     const [isPlaying, setIsPlaying] = useState(false);
@@ -31,14 +33,16 @@ const GameInterface = ({id}) => {
                     throw new Error('Failed to fetch playlist');
                 }
 
-                const data = (await response.json()).tracks.data.filter((track) => track.preview);
+                const data = (await response.json());
+                const sortedData = data.tracks.data.filter((track) => track.preview);
 
-                for (let i = data.length - 1; i > 0; i--) {
+                for (let i = sortedData.length - 1; i > 0; i--) {
                     const j = Math.floor(Math.random() * (i + 1));
-                    [data[i], data[j]] = [data[j], data[i]];
+                    [sortedData[i], sortedData[j]] = [sortedData[j], sortedData[i]];
                 }
 
-                setPlaylist(data);
+                setPlaylist(sortedData);
+                setDetails(data);
             } 
             catch (err) {
                 console.log(err.message);
@@ -58,6 +62,8 @@ const GameInterface = ({id}) => {
         if(playlist){
             const completeArtists = playlist.map((track) => track.artist.name);
             setArtists([...new Set(completeArtists)]);
+
+            console.log(`🎵 now playing ${details.title} 🎵`)
         }
     }, [playlist]);
 
@@ -118,19 +124,22 @@ const GameInterface = ({id}) => {
             <button
                 className={`${classes.playButton}`}
                 onClick={isPlaying ? handlePause : handlePlay}
+                title='play/pause'
             >
                 {isPlaying ? <FaPause /> : <FaPlay />}
             </button>
             <TextField values={artists} playlist={playlist} track={track} endRound={setRoundIsOver} roundStatus={roundIsOver}/>
             <button
-                className={roundIsOver? `${classes.hiddenButton}`: ''}
-                onClick={handleGiveUp}>
-                give up
+                className={roundIsOver? `${classes.hiddenButton}`: `${classes.nextButton}`}
+                onClick={handleGiveUp}
+                title='skip/next'
+            >
+                <IoIosSkipForward />
             </button>
             <button
-                className={roundIsOver? '': `${classes.hiddenButton}`}
+                className={roundIsOver? `${classes.nextButton}`: `${classes.hiddenButton}`}
                 onClick={handleNewRound}>
-                next
+                <IoIosSkipForward />
             </button>
         </div> 
     )

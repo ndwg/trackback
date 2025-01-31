@@ -40,6 +40,10 @@ function App() {
     return () => window.removeEventListener('resize', updatePlaylistCount);
   }, []);
 
+  useEffect(() => {
+    console.log('~~~~~~~welcome to trackback~~~~~~~~\n~~~~~~~~~~~version 1.1.2~~~~~~~~~~~\n~~a game created by Nathan Silva~~~\n~~~~~~inspired by Track Star*~~~~~~\n~~~~~powered by the Deezer API~~~~~')
+  }, []);
+
   const match = useMatch('playlist/:id')
 
   const playlist = match? match.params.id: null
@@ -51,13 +55,16 @@ function App() {
         <Route path='/playlist/:id' element={
           <GameInterface id={playlist}/>
         }/>
+        <Route path='/search/:id' element={
+          <GameInterface id={playlist}/>
+        }/>
         <Route path='/' element={
-          <>
+          <div className={`${classes.body}`}>
           <h1>choose a playlist</h1>
           <PlaylistGroup playlists={pop} count={playlistCount} name={'popular pop playlists'}/>
           <PlaylistGroup playlists={teens} count={playlistCount} name={'10s throwback'}/>
           <PlaylistGroup playlists={rap} count={playlistCount} name={'popular rap playlists'}/>
-          </>
+          </div>
           }/>
       </Routes>
       <Footer/>

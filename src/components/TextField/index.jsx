@@ -28,7 +28,7 @@ const TextField = ({ values, playlist, track, endRound, roundStatus }) => {
     };
 
     return (
-        <div className={!roundStatus ? '' : `${classes.hideDisplay}`}>
+        <div className={!roundStatus ? `${classes.display}` : `${classes.hideDisplay}`}>
             <input
                 type="text"
                 value={inputValue}

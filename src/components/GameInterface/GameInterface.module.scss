@@ -4,6 +4,8 @@
     justify-content: center;
     align-items: center;
     margin: 2rem;
+    padding-top: 7rem;
+    padding-bottom: 7rem;
 }
 
 .hiddenCover {
@@ -17,10 +19,10 @@
 .playButton {
     border-radius: 100%;
     background-color: lime;
-    border: 1px solid limegreen;
+    border: 1px solid rgb(53, 180, 53);
     color: black;
-    height: 3rem;
-    width: 3rem;
+    height: 3.5rem;
+    width: 3.5rem;
     margin: 1rem;
     display: flex;
     justify-content: center;
@@ -31,7 +33,7 @@
 }
 
 .playButton:hover {
-    background-color: rgb(16, 218, 16);
+    background-color: #10DA10;
 }
 
 .playButton:active {
@@ -40,4 +42,28 @@
 
 .hiddenButton {
     display: none;
+}
+
+.nextButton {
+    border-radius: 7%;
+    background-color: #F44174;
+    border: 1px solid #832842;
+    color: black;
+    height: 3.5rem;
+    width: 3.5rem;
+    margin: 1rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.25rem;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.nextButton:hover{
+    background-color: #d34c72;
+}
+
+.nextButton:active{
+    background-color: #df8da4;
 }
