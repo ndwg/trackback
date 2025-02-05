@@ -8,3 +8,11 @@
     border: 1px solid limegreen;
     text-align: center;
 }
+
+.playlist:hover {
+    background-color: rgb(16, 218, 16);
+}
+
+.playlist:active {
+    background-color: chartreuse;
+}

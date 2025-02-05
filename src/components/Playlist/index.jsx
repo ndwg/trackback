@@ -23,6 +23,7 @@ const Playlist = ({id}) => {
                 }
 
                 const data = await response.json();
+                if(data.title.length>25) data.title = data.title.substring(0,25) + '...'
                 setPlaylist(data);
             } catch (err) {
                 console.log(err.message);
@@ -44,7 +45,7 @@ const Playlist = ({id}) => {
     return(
         <div className={`${classes.playlist}`}>
             <img src={playlist.picture_medium} alt="" />
-            <p>{playlist.title}</p>
+            <p>{playlist.title.length>25? playlist.title.substring(0,25) + '...' : playlist.title}</p>
         </div>
     )
 }

@@ -1,0 +1,33 @@
+.searchInput,
+.searchButton {
+    height: 2.5rem;
+    padding: 0.5rem; 
+    font-size: 0.8rem;
+    border: solid 0.1rem black;
+    box-sizing: border-box;
+    line-height: normal;
+}
+
+.searchInput {
+    width: 15rem;
+    border-bottom-left-radius: 0.5rem;
+    border-top-left-radius: 0.5rem;
+    border-bottom-right-radius: 0;
+    border-top-right-radius: 0;
+    appearance: none;
+}
+
+.searchButton {
+    border-bottom-right-radius: 0.5rem;
+    border-top-right-radius: 0.5rem;
+    border-bottom-left-radius: 0;
+    border-top-left-radius: 0;
+    border-left: none;
+    cursor: pointer;
+}
+
+.container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
