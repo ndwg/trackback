@@ -27,6 +27,31 @@ const PlaylistGroup = ({ playlists, count, name }) => {
         setLeftBound((prevLeftBound) => (prevLeftBound + 1) % playlists.length);
     };
 
+    if(!playlists){
+    return (
+        <div className={`${classes.outerContainer}`}>
+            <div className={`${classes.innerContainer}`}>
+                <h2 className={`${classes.label}`}>{name}</h2>
+                <div className={`${classes.playlists}`}>
+                    <button onClick={handleLeftButton} className={`${classes.button}`}>
+                        <FaArrowLeft />
+                    </button>
+                    <ul className={`${classes.list}`}>
+                        {Array.from({ length: count }).map((_, i) => (
+                            <li key={i} className={`${classes.element}`}>
+                                <Playlist id={0} />
+                            </li>
+                        ))}
+                    </ul>
+                    <button onClick={handleRightButton} className={`${classes.button}`}>
+                        <FaArrowRight />
+                    </button>
+                </div>
+            </div>
+        </div>
+    );
+    }
+
     return (
         <div className={`${classes.outerContainer}`}>
             <div className={`${classes.innerContainer}`}>

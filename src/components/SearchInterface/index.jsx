@@ -1,7 +1,6 @@
 import classes from './SearchInterface.module.scss'
 import React, { useState } from 'react';
 import PlaylistGroup from '../PlaylistGroup';
-const API_BASE_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:5000";
 import { FaSearch } from "react-icons/fa";
 
 const SearchInterface = ({ playlistCount }) => {
@@ -11,13 +10,14 @@ const SearchInterface = ({ playlistCount }) => {
 
     const fetchSearchResults = async (event) => {
         event.preventDefault();
+        setlastSearch(searchInput);
         try {
+            const API_BASE_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:5000";
             const response = await fetch(`${API_BASE_URL}/api/search?q=${searchInput}`);
             if (!response.ok) throw new Error('Failed to fetch results');
     
             const data = (await response.json()).data.map(playlist => playlist.id);
             setSearchResults(data);
-            setlastSearch(searchInput);
         } catch (err) {
             console.log(err.message);
         }
@@ -28,7 +28,7 @@ const SearchInterface = ({ playlistCount }) => {
         setSearchInput(value);
     };
 
-    if(searchResults) return (
+    if(lastSearch) return (
         <div>
             <form action="" onSubmit={fetchSearchResults} className={`${classes.container}`}>
                 <input type="text" onChange={handleChange} className={`${classes.searchInput}`} placeholder='search for a playlist, genre, etc.'/>
