@@ -12,7 +12,7 @@ import classes from './App.module.scss';
 
 function App() {
   useEffect(() => {
-    console.log('~~~~~~~welcome to trackback~~~~~~~~\n~~~~~~~~~~~version 2.0.1~~~~~~~~~~~\n~~a game created by Nathan Silva~~~\n~~~~~~inspired by Track Star*~~~~~~\n~~~~~powered by the Deezer API~~~~~')
+    console.log('~~~~~~~welcome to trackback~~~~~~~~\n~~~~~~~~~~~version 2.0.2~~~~~~~~~~~\n~~a game created by Nathan Silva~~~\n~~~~~~inspired by Track Star*~~~~~~\n~~~~~powered by the Deezer API~~~~~')
   }, []);
 
   const match = useMatch('playlist/:id')
